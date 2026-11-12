@@ -25,3 +25,4 @@ Các biểu đồ được lưu trong thư mục `reports/figures/`, bao gồm:
 
 ### Notebook
 `notebooks/02_eda_demographics_churn.ipynb`
+Cuối notebook có nhận xét
