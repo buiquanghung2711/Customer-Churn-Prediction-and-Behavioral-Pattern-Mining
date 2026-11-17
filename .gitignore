@@ -1,0 +1,66 @@
+# Byte-compiled / optimized / Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution & packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter Notebook checkpoints & cache
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Machine learning model artifacts & binary weights (avoid committing heavy binaries)
+models/*.pkl
+models/*.joblib
+models/*.h5
+models/*.pt
+models/*.pth
+models/*.onnx
+
+# Temporary / intermediate data & large archives
+data/interim/*
+!data/interim/.gitkeep
+*.zip
+*.tar.gz
+*.rar
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# IDE & Editor configs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.directory
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Testing & linting cache
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Preserve directory placeholders
+!.gitkeep
+
+.agents
+PROJECT_STRUCTURE.md
+.gitignore
