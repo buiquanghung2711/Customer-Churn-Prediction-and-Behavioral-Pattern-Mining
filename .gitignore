@@ -60,7 +60,3 @@ htmlcov/
 
 # Preserve directory placeholders
 !.gitkeep
-
-.agents
-PROJECT_STRUCTURE.md
-.gitignore
