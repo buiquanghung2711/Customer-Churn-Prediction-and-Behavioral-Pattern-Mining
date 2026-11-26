@@ -15,7 +15,7 @@
 **Để công cụ AI tự đọc file:** Claude Code đọc `CLAUDE.md`, Cursor / Codex đọc `AGENTS.md`, GitHub Copilot đọc `.github/copilot-instructions.md`. Tạo các file đó với đúng một dòng:
 
 ```
-Đọc và tuân thủ toàn bộ nội dung file plan.md ở thư mục gốc trước khi làm bất cứ việc gì.
+Đọc và tuân thủ toàn bộ nội dung file docs/plan.md trước khi làm bất cứ việc gì.
 ```
 
 ---
@@ -34,9 +34,11 @@
 | Đầu ra cuối | Báo cáo, slide, notebook chạy lại được, danh sách khách rủi ro cao kèm đề xuất hành động |
 | Khung quy trình | CRISP-DM |
 
-Tài liệu chi tiết (hiện ở nhánh `feat/pattern-mining`, thư mục gốc):
-- `problem_definition.md` - định nghĩa bài toán, mốc thời gian, nhãn churn, câu hỏi nghiên cứu
-- `pattern_mining_approach.md` - quy trình khai phá mẫu, tham số, kết quả chạy thử
+Tài liệu chi tiết (trong thư mục `docs/`):
+- `docs/problem_definition.md` - định nghĩa bài toán, mốc thời gian, nhãn churn, câu hỏi nghiên cứu
+- `docs/pattern_mining_approach.md` - quy trình khai phá mẫu, tham số, kết quả chạy thử
+- `docs/PROJECT_STRUCTURE.md` - sơ đồ và quy ước thư mục dự án
+- `docs/ai_usage_log.md` - nhật ký sử dụng AI theo quy tắc R8
 
 ---
 
@@ -53,7 +55,7 @@ Tài liệu chi tiết (hiện ở nhánh `feat/pattern-mining`, thư mục gố
 | D5 | Dùng bộ **T-M-S** (Tenure, MonthlyCharges, số dịch vụ cộng thêm) thay cho RFM | Không có giao dịch để tính Recency, Frequency |
 | D6 | `random_state = 42` ở mọi nơi | Tái lập kết quả |
 | D7 | Chỉ số mô hình chính: **PR-AUC**; phụ: Recall lớp churn, F1, ROC-AUC, Lift@20% | Nhãn mất cân bằng (26,6%) |
-| D8 | Rời rạc hóa: tenure `0-6, 7-12, 13-24, 25-48, 49-72`; MonthlyCharges tam phân vị fit trên train | Xem `pattern_mining_approach.md` mục 3 |
+| D8 | Rời rạc hóa: tenure `0-6, 7-12, 13-24, 25-48, 49-72`; MonthlyCharges tam phân vị fit trên train | Xem `docs/pattern_mining_approach.md` mục 3 |
 | D9 | Khai phá luật: FP-Growth, `min_support=0.03`, `max_len=4`, `min_confidence=0.5`, `lift≥1.5`, minimum improvement `δ=0.02`, kiểm tra trên holdout | Đã chạy thử, 88% luật giữ vững trên holdout |
 | D10 | Không dùng `customerID` làm đặc trưng; không dùng trực tiếp `TotalCharges` cho khai phá mẫu | Định danh / gần trùng với `tenure × MonthlyCharges` |
 
@@ -138,11 +140,14 @@ Dùng **cùng một từ** cho cùng một khái niệm trong code, báo cáo v�
 
 ```
 Customer-Churn-Prediction-and-Behavioral-Pattern-Mining/
-├── plan.md                              ○ file này
-├── problem_definition.md                ✓ feat/pattern-mining
-├── pattern_mining_approach.md           ✓ feat/pattern-mining
+├── docs/
+│   ├── plan.md                          ✓ develop (file này)
+│   ├── problem_definition.md            ✓ develop
+│   ├── pattern_mining_approach.md       ✓ develop
+│   ├── PROJECT_STRUCTURE.md             ✓ develop
+│   └── ai_usage_log.md                  ✓ develop
 ├── README.md                            ✓
-├── requirements.txt                     ✓ develop (cần bổ sung, mục 8)
+├── requirements.txt                     ✓ develop (đã bổ sung đầy đủ thư viện, mục 8)
 ├── .gitignore                           ✓ develop
 ├── data/
 │   ├── raw/WA_Fn-UseC_-Telco-Customer-Churn.csv     ✓ KHÔNG sửa
@@ -164,9 +169,10 @@ Customer-Churn-Prediction-and-Behavioral-Pattern-Mining/
 │   └── viz.py                           ○ hàm vẽ dùng chung
 ├── models/                              ✓ mô hình đã huấn luyện (*.pkl đã bị .gitignore)
 ├── reports/
-│   ├── figures/                         ✓ feat/eda-visualization
-│   └── tables/                          ○ bảng luật, so sánh mô hình
-└── report/                              ✓ báo cáo cuối, slide
+│   ├── figures/                         ✓ feat/eda-visualization & develop
+│   ├── tables/                          ✓ develop - bảng luật, so sánh mô hình
+│   └── ...                              ✓ develop - tài liệu báo cáo cuối, slide
+└── results/                             ✓ develop - đầu ra thí nghiệm, danh sách khách rủi ro cao
 ```
 
 Số thứ tự notebook từ 03 trở đi là đề xuất. Ai tạo notebook mới thì dùng số tiếp theo chưa có và cập nhật cây thư mục ở trên.
@@ -175,24 +181,22 @@ Số thứ tự notebook từ 03 trở đi là đề xuất. Ai tạo notebook m
 
 ## 7. Phân công và tiến độ
 
-**Ngày bắt đầu tuần 1:** `____/____/2026` - nhóm điền vào.
+**Ngày bắt đầu tuần 1:** `26/11/2026`
 
 | Thành viên | Vai trò | Nhánh / phần sở hữu |
 |---|---|---|
-| ____ | Trưởng nhóm & BA | `plan.md`, `problem_definition.md`, đánh giá kinh doanh, `report/` |
-| ____ | Data Engineer | `feat/data-loader-cleaning`, `feat/feature-engineering`, `src/data_loader.py`, `src/features.py` |
-| ____ | Data Analyst - Behavior Mining | `feat/eda-visualization`, `feat/pattern-mining`, `src/mining.py`, `src/viz.py` |
-| ____ | ML Engineer | `feat/modeling` (sẽ tạo), `src/models.py` |
-
-*(Nhóm điền tên thật vào cột Thành viên.)*
+| **Hưng** | Trưởng nhóm & ML Lead | `docs/plan.md`, duyệt PR, `feat/modeling`, `src/models.py`, `06_models.ipynb`, `07_shap.ipynb`, đánh giá kinh doanh & báo cáo tổng |
+| **Hiếu** | Data & Feature Engineer | `feat/data-loader-cleaning`, `feat/feature-engineering`, `src/data_loader.py`, `src/config.py`, `src/features.py`, `04_tms_cluster.ipynb` |
+| **Hòa** | EDA, Visualization & Slide Lead | `feat/eda-visualization`, `02_eda_demographics_churn.ipynb`, `03_eda_services_contract.ipynb`, `src/viz.py`, chuẩn hóa biểu đồ & Slide |
+| **Kiên** | Pattern Mining & Research Lead | `feat/pattern-mining`, `docs/problem_definition.md`, `docs/pattern_mining_approach.md`, `src/mining.py`, `05_pattern_mining.ipynb` |
 
 | Phần việc | Nhánh | Trạng thái |
 |---|---|---|
 | Khởi tạo repo, cấu trúc thư mục | `main` | Xong |
 | Làm sạch dữ liệu, `data_loader.py`, `01_data_cleaning` | `feat/data-loader-cleaning` | Xong, đã gộp vào `develop` |
 | EDA nhân khẩu học, kiểm định Chi-square, Cramér's V | `feat/eda-visualization` | Xong, **chưa gộp** vào `develop` |
-| Định nghĩa bài toán, cách tiếp cận khai phá mẫu | `feat/pattern-mining` | Xong tài liệu, **chưa gộp** |
-| `plan.md` | | Đang làm |
+| Định nghĩa bài toán, cách tiếp cận khai phá mẫu | `feat/pattern-mining` | Xong, đã gộp vào `develop` (`docs/`) |
+| `docs/plan.md` & đồng bộ `docs/` | `develop` | Xong, đã gộp vào `develop` (`docs/`) |
 | EDA dịch vụ, hợp đồng, thanh toán | | Chưa bắt đầu |
 | Đặc trưng T-M-S, chia train/test | `feat/feature-engineering` | Đã tạo nhánh, chưa có commit |
 | Khai phá luật, contrast, subgroup discovery | `feat/pattern-mining` | Chưa bắt đầu phần code |
@@ -205,7 +209,7 @@ Số thứ tự notebook từ 03 trở đi là đề xuất. Ai tạo notebook m
 
 ## 8. Quy ước code
 
-1. **Python 3.10+**. Thư viện cần có trong `requirements.txt` (bản trên `develop` mới có `pandas`, `numpy`, `jupyter`, `nbformat`):
+1. **Python 3.10+**. Thư viện cần có trong `requirements.txt` (bản trên `develop` đã bổ sung đầy đủ thư viện):
    `matplotlib`, `seaborn`, `scipy`, `statsmodels`, `scikit-learn`, `mlxtend`, `pysubgroup`, `imbalanced-learn`, `xgboost`, `lightgbm`, `shap`. Ai thêm thư viện thì cập nhật `requirements.txt` trong cùng PR.
 2. **Đường dẫn dữ liệu** lấy từ `src/data_loader.py` (`RAW_DATA_PATH`, `PROCESSED_DATA_PATH`). **Hằng số mới** (seed, ngưỡng, mốc rời rạc hóa) đặt trong `src/config.py`. Không viết cứng trong notebook.
 3. **Notebook phải chạy từ trên xuống dưới** sau khi Restart Kernel mà không lỗi. Logic dùng lại được thì chuyển vào `src/`. Đầu notebook phân tích luôn có đoạn code chuẩn ở mục 3.
@@ -236,19 +240,19 @@ Số thứ tự notebook từ 03 trở đi là đề xuất. Ai tạo notebook m
 
 | # | Quy tắc | Vì sao |
 |---|---|---|
-| R1 | **Đưa `plan.md` cho AI trước khi giao việc** | AI không biết các quyết định đã chốt |
+| R1 | **Đưa `docs/plan.md` cho AI trước khi giao việc** | AI không biết các quyết định đã chốt |
 | R2 | **Không chấp nhận đề xuất trái với mục 2** (chia theo thời gian, dùng RFM, bỏ bước lọc `tenure > 0`, đổi seed...) | Giữ thống nhất cả nhóm |
 | R3 | **Mọi con số trong báo cáo phải đến từ code chạy được trong repo.** Không chép số AI đưa ra mà chưa tự chạy | AI có thể bịa số liệu |
 | R4 | **Mọi trích dẫn phải tự mở và kiểm tra bài gốc** (tác giả, năm, tên bài, nơi đăng) | AI có thể bịa tài liệu tham khảo |
 | R5 | **Code AI viết phải được chạy và đọc hiểu** trước khi commit. Người commit chịu trách nhiệm | Tránh lỗi ẩn, tránh không giải thích được khi bị hỏi |
 | R6 | **Không dán dữ liệu cá nhân hoặc dữ liệu công ty** vào AI. Chỉ dùng bộ Telco công khai | Bảo mật |
 | R7 | **Không nộp văn bản AI viết nguyên văn.** Phải viết lại bằng lời của nhóm và hiểu nội dung | Liêm chính học thuật |
-| R8 | **Ghi nhật ký** mỗi lần dùng AI cho việc quan trọng vào `ai_usage_log.md` | Minh bạch khi báo cáo, theo yêu cầu môn học |
+| R8 | **Ghi nhật ký** mỗi lần dùng AI cho việc quan trọng vào `docs/ai_usage_log.md` | Minh bạch khi báo cáo, theo yêu cầu môn học |
 | R9 | **Dùng đúng thuật ngữ ở mục 5** khi yêu cầu AI viết hoặc sửa nội dung | Báo cáo nhất quán |
 | R10 | Khi AI đề xuất **thay đổi quyết định đã chốt** và bạn thấy hợp lý: **không tự sửa**, đưa ra họp nhóm | Tránh mỗi người một hướng |
 | R11 | **Không để AI sửa code của thành viên khác** trong PR của mình. Thấy lỗi thì báo người sở hữu (mục 7) | Tránh xung đột khi gộp nhánh |
 
-### 9.3 Mẫu nhật ký `ai_usage_log.md`
+### 9.3 Mẫu nhật ký `docs/ai_usage_log.md`
 
 ```markdown
 | Ngày | Người | Công cụ | Việc nhờ AI | Đã kiểm tra / chỉnh sửa gì |
@@ -260,11 +264,11 @@ Số thứ tự notebook từ 03 trở đi là đề xuất. Ai tạo notebook m
 
 ## 10. Mẫu prompt khi bắt đầu phiên AI
 
-Sao chép, điền vào chỗ trống, đính kèm `plan.md` và tài liệu liên quan:
+Sao chép, điền vào chỗ trống, đính kèm `docs/plan.md` và tài liệu liên quan:
 
 ```
-Bối cảnh: Tôi là [tên] - [vai trò] trong dự án ở file plan.md đính kèm.
-Hãy đọc kỹ plan.md và tuân thủ mục 2 (quyết định đã chốt), mục 3 (luồng dữ liệu),
+Bối cảnh: Tôi là [tên] - [vai trò] trong dự án ở file docs/plan.md đính kèm.
+Hãy đọc kỹ docs/plan.md và tuân thủ mục 2 (quyết định đã chốt), mục 3 (luồng dữ liệu),
 mục 5 (thuật ngữ), mục 8 (quy ước code).
 Không đề xuất thay đổi quyết định đã chốt. Nếu thấy cần thay đổi, chỉ nêu ra để tôi đưa vào họp nhóm.
 Không tự đưa ra số liệu hay trích dẫn - nếu cần, hãy viết code để tôi tự chạy.
@@ -285,7 +289,7 @@ Tiêu chí đúng: [ví dụ: tập phân tích 7.032 dòng, 1.869 churn]
 - [ ] Notebook phân tích / mô hình có bước lọc `tenure > 0` và `assert` số dòng (mục 3).
 - [ ] Không có bước nào fit trên toàn bộ dữ liệu trước khi chia train/test.
 - [ ] Thư viện mới đã thêm vào `requirements.txt`; hằng số mới đã đưa vào `src/config.py`.
-- [ ] Code do AI viết đã được đọc hiểu và ghi vào `ai_usage_log.md`.
+- [ ] Code do AI viết đã được đọc hiểu và ghi vào `docs/ai_usage_log.md`.
 - [ ] Hình vào `reports/figures/`, bảng vào `reports/tables/`.
 
 ---
@@ -295,10 +299,11 @@ Tiêu chí đúng: [ví dụ: tập phân tích 7.032 dòng, 1.869 churn]
 | Ngày | Người | Thay đổi |
 |---|---|---|
 | 2026-11-18 | ____ | Tạo v1.0 theo hiện trạng repo: quyết định D1-D10, luồng dữ liệu hai lớp, số liệu chuẩn, git flow `feat/*` → `develop`, quy tắc dùng AI |
+| 2026-11-26 | Hưng | Cập nhật v1.1: đồng bộ tài liệu vào `docs/`, thống nhất `reports/` và giữ lại `results/`, chốt phân công 4 thành viên (Hưng, Hiếu, Hòa, Kiên) |
 
 **Câu hỏi mở cho buổi họp:**
 
-- [ ] Repo đang có cả `report/`, `reports/` và `results/`. Đề xuất: giữ `reports/` cho hình và bảng, `report/` cho báo cáo cuối và slide, xóa `results/`.
-- [ ] Có chuyển `problem_definition.md`, `pattern_mining_approach.md` vào thư mục `docs/` cho gọn không?
+- [x] Đã chốt thống nhất `report/` → `reports/` (chứa `figures/`, `tables/`, báo cáo cuối & slide) và giữ lại `results/` cho đầu ra thí nghiệm / danh sách khách hàng rủi ro cao.
+- [x] Đã chuyển `problem_definition.md`, `pattern_mining_approach.md`, `plan.md`, `PROJECT_STRUCTURE.md`, `ai_usage_log.md` vào thư mục `docs/`.
 - [ ] `clean_data()` điền `TotalCharges` rỗng bằng `MonthlyCharges` cho 11 khách `tenure = 0`. Vì nhóm này bị lọc ở bước phân tích (D3) nên không ảnh hưởng kết quả, nhưng nên ghi chú trong notebook `01_data_cleaning`.
 - [ ] Gộp `feat/eda-visualization` và `feat/pattern-mining` vào `develop`. Khi gộp sẽ có xung đột ở `requirements.txt` và `README.md`.

@@ -4,12 +4,13 @@
 
 ```text
 Customer-Churn-Prediction-and-Behavioral-Pattern-Mining/
-├── plan.md                              # Nguồn chuẩn duy nhất: quyết định D1-D10, quy ước code, phân công
-├── problem_definition.md                # Định nghĩa bài toán, mốc thời gian T0, cửa sổ churn, câu hỏi nghiên cứu
-├── pattern_mining_approach.md           # Quy trình khai phá mẫu, tham số FP-Growth, kết quả pilot
-├── ai_usage_log.md                      # Nhật ký sử dụng AI theo quy tắc R8
+├── docs/                                # Tài liệu dự án
+│   ├── plan.md                          # Nguồn chuẩn duy nhất: quyết định D1-D10, quy ước code, phân công
+│   ├── problem_definition.md            # Định nghĩa bài toán, mốc thời gian T0, cửa sổ churn, câu hỏi nghiên cứu
+│   ├── pattern_mining_approach.md       # Quy trình khai phá mẫu, tham số FP-Growth, kết quả pilot
+│   ├── ai_usage_log.md                  # Nhật ký sử dụng AI theo quy tắc R8
+│   └── PROJECT_STRUCTURE.md             # Sơ đồ và quy ước thư mục (file này)
 ├── README.md                            # Giới thiệu dự án và hướng dẫn chạy
-├── PROJECT_STRUCTURE.md                 # Sơ đồ và quy ước thư mục (file này)
 ├── requirements.txt                     # Danh sách thư viện Python (Python 3.10+)
 ├── .gitignore                           # Bỏ qua cache, venv, checkpoints, model binaries (*.pkl)
 ├── .gitattributes                       # Chuẩn hóa xuống dòng LF
@@ -39,11 +40,12 @@ Customer-Churn-Prediction-and-Behavioral-Pattern-Mining/
 │
 ├── models/                              # Lưu mô hình đã huấn luyện (*.pkl, *.joblib - bị chặn bởi .gitignore)
 │
-├── reports/                             # Đầu ra tự động từ code và notebook
+├── reports/                             # Đầu ra từ code/notebook và tài liệu bàn giao cuối kỳ
 │   ├── figures/                         # Hình ảnh biểu đồ (ten_mo_ta.png)
-│   └── tables/                          # Bảng kết quả, danh sách luật, bảng so sánh mô hình (ten_mo_ta.csv)
+│   ├── tables/                          # Bảng kết quả, danh sách luật, bảng so sánh mô hình (ten_mo_ta.csv)
+│   └── ...                              # Báo cáo học thuật, slide thuyết trình
 │
-└── report/                              # Tài liệu bàn giao cuối kỳ (báo cáo học thuật, slide thuyết trình)
+└── results/                             # Đầu ra thí nghiệm và danh sách khách hàng rủi ro cao
 ```
 
 ---
@@ -56,6 +58,6 @@ Customer-Churn-Prediction-and-Behavioral-Pattern-Mining/
 2. **`src/` & `notebooks/`**:
    - Không hardcode đường dẫn hoặc hằng số trong notebook; import từ `src/data_loader.py` và `src/config.py`.
    - Mọi bước học từ dữ liệu (scaler, encoder, tam phân vị `MonthlyCharges`, SMOTE, khai phá luật làm đặc trưng) chỉ **fit trên tập Train (70%)**, tuyệt đối không fit trên toàn bộ dữ liệu trước khi chia.
-3. **`reports/` vs `report/`**:
-   - `reports/figures/` và `reports/tables/` chứa biểu đồ `.png` và bảng `.csv` xuất trực tiếp từ code.
-   - `report/` chứa file báo cáo tổng kết và slide thuyết trình của nhóm.
+3. **`reports/` & `results/`**:
+   - `reports/figures/` và `reports/tables/` chứa biểu đồ `.png` và bảng `.csv` xuất trực tiếp từ code; thư mục `reports/` cũng lưu báo cáo tổng kết và slide thuyết trình của nhóm.
+   - `results/` lưu các kết quả đầu ra thí nghiệm bổ sung và danh sách khách hàng rủi ro cao kèm đề xuất hành động.

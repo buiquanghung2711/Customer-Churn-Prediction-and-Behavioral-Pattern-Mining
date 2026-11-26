@@ -2,7 +2,7 @@
 
 > **Trạng thái:** v1.0
 > **Phụ thuộc:** [`problem_definition.md`](./problem_definition.md) - định nghĩa nhãn, tập phân tích 7.032 khách, tỷ lệ nền 26,58%
-> **Notebook chính:** `notebooks/04_rules.ipynb` - **Module:** `src/mining/`
+> **Notebook chính:** `notebooks/05_pattern_mining.ipynb` - **Module:** `src/mining.py` (kết hợp `src/features.py`)
 
 Tài liệu này trả lời ba câu hỏi: nhóm sẽ dùng những kỹ thuật khai phá mẫu nào, chạy theo các bước ra sao với tham số nào, và kết quả bàn giao cho ai. Mục 6 có kết quả chạy thử thật trên bộ Telco để nhóm thấy trước đầu ra trông thế nào.
 
@@ -129,17 +129,16 @@ Kết quả: **51 item**, ma trận one-hot dạng boolean.
 ## 5. Cấu trúc code
 
 ```
-src/mining/
-├── transactions.py    # build_transactions(df, cut_points) -> DataFrame bool  (TV2)
-├── rules.py           # mine_rules, min_improvement_filter, fisher_filter       (TV3)
-├── validate.py        # holdout_check, sensitivity_check                       (TV3)
-└── features.py        # rules_to_features(df, rules)                           (TV4)
+src/
+├── features.py                # build_transactions / chia train-test 70-30, rules_to_features
+└── mining.py                  # mine_rules, min_improvement_filter, fisher_filter, holdout_check, sensitivity_check
 notebooks/
-└── 04_rules.ipynb     # chạy B1-B7, xuất bảng luật và biểu đồ
+└── 05_pattern_mining.ipynb    # chạy B1-B7, xuất bảng luật và biểu đồ
 reports/
-├── rules_churn.csv
-├── rules_retention.csv
-└── subgroups.csv
+└── tables/
+    ├── rules_churn.csv
+    ├── rules_retention.csv
+    └── subgroups.csv
 ```
 
 Khung code cho bước B2-B3:
@@ -159,6 +158,8 @@ churn_rules = rules[
 ## 6. Kết quả chạy thử
 
 Chạy đúng quy trình B1-B5 với tham số ở mục 4 trên tập train 4.962 khách, kiểm tra trên holdout 2.070 khách.
+
+> **Lưu ý đồng bộ với `docs/plan.md`:** Kết quả pilot bên dưới dùng phép chia thử nghiệm cũ (4.962 / 2.070). Khi triển khai chính thức trong repo, bước B1 phải gọi chung hàm chia stratified 70/30 từ `src/features.py` (**4.922 train / 2.110 holdout**, `random_state=42`) để khớp dữ liệu với mô hình dự đoán ở thí nghiệm RQ4.
 
 ### 6.1 Số lượng luật qua từng bước lọc
 
@@ -207,13 +208,13 @@ Hai luật dưới không thêm thông tin gì so với luật đầu (confidenc
 | Thành viên | Việc trong mảng khai phá mẫu | Hạn |
 |---|---|---|
 | TV1 | Duyệt định nghĩa item, gom luật thành phân khúc, viết chân dung và đề xuất hành động | Tuần 4 |
-| TV2 | `transactions.py`: rời rạc hóa (fit trên train), làm sạch item, test không rò rỉ | Giữa tuần 2 |
-| TV3 | `rules.py`, `validate.py`, notebook `04_rules`: chạy B2-B7, kiểm tra độ nhạy, xuất bảng và biểu đồ | Tuần 3-4 |
-| TV4 | `features.py`, thí nghiệm RQ4 với khai phá luật trong từng fold | Tuần 4-5 |
+| TV2 | `src/features.py` (phần rời rạc hóa fit trên train): chuẩn bị dữ liệu đầu vào, test không rò rỉ | Tuần 1 |
+| TV3 | `src/mining.py`, notebook `05_pattern_mining`: chạy B1-B7, kiểm tra độ nhạy, xuất bảng và biểu đồ | Tuần 2-3 |
+| TV4 | `rules_to_features` + `src/models.py`, thí nghiệm RQ4 với khai phá luật trong từng fold | Tuần 3 |
 
 ### Tiêu chí hoàn thành
 
-- [ ] Notebook `04_rules` chạy lại từ đầu ra cùng kết quả (seed 42).
+- [ ] Notebook `05_pattern_mining` chạy lại từ đầu ra cùng kết quả (seed 42).
 - [ ] Mỗi luật báo cáo có đủ: điều kiện, số khách, support, confidence, lift, kết quả holdout.
 - [ ] Có bảng kiểm tra độ nhạy với cách rời rạc hóa thứ hai.
 - [ ] Top luật đã gom thành 3-6 phân khúc có tên và chân dung.
